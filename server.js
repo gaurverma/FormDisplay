@@ -2,28 +2,39 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const ejs = require('ejs');
+const port = process.env.PORT || 4040;
 const { kStringMaxLength } = require('buffer');
 
 app.set('view engine', 'ejs');
 
-mongoose.connect('mongodb+srv://admin-marina:marinochka90@cluster0.hr1hl.mongodb.net/moviesDB?retryWrites=true&w=majority');
+const db  = "mongodb+srv://vermagaur:Dev567@cluster0.uzvy3.mongodb.net/nodejsintern?retryWrites=true&w=majority";
+mongoose.connect(db, { 
+        useUnifiedTopology: true,
+        useNewUrlParser:true,
+      })
+    .then(() => console.log('MongoDB connected...'))
+    .catch(err => console.log(err));
 
-const moviesSchema = {
-    title: String,
-    genre: String,
-    year: String
+const UserSchema = {
+    fname:String, 
+    lname:String,
+    contact:Number,
+    email:String,
+    address:String,
+    userid:String,
+    passwrd: String
 }
 
-const Movie = mongoose.model('Movie', moviesSchema);
+const Usermodel = mongoose.model('registers',UserSchema);
 
 app.get('/', (req, res) => {
-    Movie.find({}, function(err, movies) {
+    Usermodel.find({}, function(err, registers) {
         res.render('index', {
-            moviesList: movies
+            usersList: registers
         })
     })
 })
 
-app.listen(4000, function() {
+app.listen(port, function() {
     console.log('server is running');
 })
